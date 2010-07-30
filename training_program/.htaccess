@@ -1,0 +1,7 @@
+AuthUserFile /var/www/training/.htpasswd
+AuthName "hi"
+AuthType Basic
+
+<Limit GET POST>
+require valid-user
+</Limit>

@@ -1,0 +1,72 @@
+Senior Project, 2009 - Project Outline
+Project:	Twitter-Sense
+Student:	Paul Bellamy
+Date Written:	Oct 16, 2009
+Finishing Date:	May 30, 2009 (Tentatively)
+
+Project Goal:
+------------------------------------
+	To explore the limits of brain plasticity, and sensory addition.  The ultimate question posed by this project is, can the brain learn to perceive radically different senses.  Work done on the Northpaw/Feelspace project, with implanted magnets, and work done by Bach-y-Rita show us that the brain can indeed learn to process new sensory data.  However, these projects have all been working with spatially-bound sensory data (location, direction, vision, fields of magnetism, etc).  The goal of this project is to determine if the human brain can learn to perceive completely abstract data.
+	
+Hypothesis:
+------------------------------------
+	Given sufficient training the human brain can learn to seamlessly integrate and process extremely abstract data as if it were a new sense.
+	
+Expectations:
+------------------------------------
+	I expect the learning and integration process to be similar to learning to read, or learning a new language, where initially the input is perceived as jumbled random noise, and slowly (with training), the brain learns to process it, and break it down into intelligible patterns.
+	I also suspect that training will be necessary in order to increase the likelihood of reaching the Integration State (the ultimate goal).
+
+Terminology:
+------------------------------------
+	Experimenter:
+		The person administering the experiment. (ie. Me)
+	Subject:
+		The person being experimented on. (ie. Me)
+	Source:
+		Receives the data from the world. (ie. the sensory organ, say an eye)
+	Data:
+		The information being received by the source (eg. the light received by that eye)
+	Interface:
+		Transmits the data in such a way that the brain can absorb it. (eg. the nervous system)
+	Initial State:
+		The data cannot be interpreted by the brain.
+	Translation State:
+		The data can be interpreted by the brain, with concious effort.
+	Integration State:
+		Data perception, and interpretation becomes subconcious, leading to new sensory modalities.
+
+Project Plan: 
+------------------------------------
+	A large portion of this project will need to be devoted to developing/building the hardware/software needed for this project.  We will need hardware/software designed for the "Source" and for the "Interface".  We will also need a way to carry out the training of the subject.
+	As such, the first phase of the project will be the "Developmental Phase", which will be immediately followed by the "Experimentation Phase".
+	Throughout the project, documentation will be produced.  Once the project is completed, this documentation will be compiled and analyzed in the "Analysis Phase".
+
+Developmental Phase: Dec 14 - Feb 12
+------------------------------------
+	Goals:	- Selected appropriate data Source.
+		- Fully develop and build Source.
+		- Fully develop and build Interface.
+	
+	Prototype software for training, and proof-of-concept.
+		
+	
+
+Experimental Phase: Feb 16 - May 14
+------------------------------------
+	Goals:	- Test the hypothesis.
+		- Maintain experimental validity (as much as possible with such a small # of Subjects).
+	
+	
+	
+Analysis Phase: May 17 - May 28
+------------------------------------
+	Goals:	- Thoroughly examine results.
+		- Draw conclusions about hypothesis.
+		- Find areas for further study.
+
+Buffer Zone: May 28 - 
+------------------------------------
+  To allow for any deviation in the timeline.	
+
+

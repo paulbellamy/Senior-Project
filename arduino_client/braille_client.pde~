@@ -1,0 +1,153 @@
+/*
+ * A simple sketch that uses WiServer to check for new tweets, and prints them 30 seconds
+ */
+#include "dictionary.h"
+#include "output.h"
+#include <WiServer.h>
+
+#define DEBUG 1
+#define WIRELESS_MODE_INFRA	1
+#define WIRELESS_MODE_ADHOC	2
+
+// Wireless configuration parameters ----------------------------------------
+unsigned char local_ip[] = {192,168,1,86};	// IP address of WiShield
+unsigned char gateway_ip[] = {192,168,1,1};	// router or gateway IP address
+unsigned char subnet_mask[] = {255,255,255,0};	// subnet mask for the local network
+const prog_char ssid[] PROGMEM = {"wrigka"};		// max 32 bytes
+
+unsigned char security_type = 3;	// 0 - open; 1 - WEP; 2 - WPA; 3 - WPA2
+
+// WPA/WPA2 passphrase
+const prog_char security_passphrase[] PROGMEM = {"ger0n1m0"};	// max 64 characters
+
+// WEP 128-bit keys
+// sample HEX keys
+prog_uchar wep_keys[] PROGMEM = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d,	// Key 0
+				  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	// Key 1
+				  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	// Key 2
+				  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	// Key 3
+				};
+
+// setup the wireless mode
+// infrastructure - connect to AP
+// adhoc - connect to another WiFi device
+unsigned char wireless_mode = WIRELESS_MODE_INFRA;
+
+unsigned char ssid_len;
+unsigned char security_passphrase_len;
+// End of wireless configuration parameters ----------------------------------------
+
+bool firstRun = true;
+
+// Set the IP Address for the server
+uint8 server_ip[] = {192,147,173,116}; // nyx.cs.wallawalla.edu
+uint8 google_ip[] = {208,67,216,231};  // www.google.com
+char URL[] = "/twitter.php?pass=QUt3zypsgO855DUDPnPqrhye21MZXxprSNbfODiyHVtrZgcKq4uipzBwwZ5kV7Lr";
+//char URL[] = "/twitter.php?pass=hi";
+
+// Create a request that gets the latest Tweets
+GETrequest checkNewResults(server_ip, 80, "www.paulbellamy.com", URL);
+GETrequest googleCheck(google_ip, 80, "www.google.com", "/");
+
+unsigned int loopCount = 0;
+bool gotHeaders = false;
+
+// Skip all headers of the HTTP response.
+char headerBuf[4];
+char* skipHeaders(char *data, int len) {
+  for (int i=0; i < len && !gotHeaders; i++) {
+    headerBuf[3] = headerBuf[2];
+    headerBuf[2] = headerBuf[1];
+    headerBuf[1] = headerBuf[0];
+    headerBuf[0] = data[0];
+    data++;
+    
+    //Serial.print(headerBuf[0]);
+    if ((headerBuf[0] == '\n') && (headerBuf[1] == '\r') && (headerBuf[2] == '\n') && (headerBuf[3] == '\r')) {
+        gotHeaders = true;
+    }
+  }
+  
+  return data;
+}
+
+void processResults(char* data, int len) {    
+  //Serial.println("ProcessingData...");
+  
+  // Skip the first request
+  if (len == 0) {
+    firstRun = false;
+    gotHeaders = false;
+  }
+  
+  if (firstRun) {
+    return;
+  }
+  
+  data = skipHeaders(data, len);
+  
+  Serial.println(data);
+  //outputString(data);
+  
+  //Serial.println("\nDoneProcessingData...");
+}
+
+void setup() {
+  // Enable Serial output
+  Serial.begin(57600);
+  //establishContact();
+  
+  // ask WiServer to generate log messages (optional)
+  //WiServer.enableVerboseMode(true);
+  
+  // Initialize WiServer (we'll pass NULL for the page serving function since we don't need to serve web pages) 
+  Serial.println("Initializing WiServer.");
+  WiServer.init(NULL);
+  
+  // Initialize our output stuff
+  initializeOutputPins();
+  
+  // Have the processResults function called when data is returned by the server
+  checkNewResults.setReturnFunc(processResults);
+  googleCheck.setReturnFunc(processResults);
+  Serial.println("Output Function set.");
+}
+
+// Time (in millis) when the server should be checked next
+unsigned long previousMillis = 0;
+unsigned long interval = 30000; // interval to check (milliseconds)
+
+// For Serial processing
+int inByte = 0; // incoming serial byte.
+
+void loop() {
+  // Run WiServer
+  WiServer.server_task();
+  
+  // if we got something on serial...
+  if (Serial.available() > 0) {
+    // get the incoming byte
+    inByte = Serial.read();
+    outputChar(inByte); // non-buffered for now
+  }
+  
+  /*
+  if (firstRun) {
+    firstRun = false;
+    Serial.println("Checking Google");
+    googleCheck.submit();
+  }
+  */
+  
+  // Check if it's time to check the server
+  if (millis() - previousMillis > interval) {
+    // Check again in another interval
+    previousMillis = millis();
+    
+    Serial.print("Checking Server: loopCount: ");
+    Serial.println(loopCount++);
+    //Serial.print("Address: paulbellamy.com");
+    //Serial.println(URL);
+    checkNewResults.submit();
+  }
+}
